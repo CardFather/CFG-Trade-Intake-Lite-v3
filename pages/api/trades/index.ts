@@ -12,11 +12,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === "POST") {
     const { customer, sortswift_order_no, est_item_count, notes, staff_checkin } = req.body || {};
     const today = new Date();
-    const { data: list } = await supabase.from("trades").select("id").gte("checkin_at", new Date(today.getFullYear(), today.getMonth(), today.getDate()).toISOString());
+    const { data: list } = await supabase
+      .from("trades")
+      .select("id")
+      .gte("checkin_at", new Date(today.getFullYear(), today.getMonth(), today.getDate()).toISOString());
     const seq = (list?.length || 0) + 1;
     const intake_id = makeIntakeId(today, seq);
     const queue_number = seq;
     const qr_slug = randomUUID().split("-")[0];
+
     const { data, error } = await supabase.from("trades").insert({
       intake_id, queue_number, qr_slug,
       shopify_customer_id: customer?.id ? String(customer.id) : null,
@@ -32,6 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (error) return res.status(500).json({ error: error.message });
     return res.status(201).json({ trade: data });
   }
+
   if (req.method === "GET") {
     const { status } = req.query;
     let q = supabase.from("trades").select("*").order("checkin_at", { ascending: false }).limit(100);
@@ -40,5 +45,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (error) return res.status(500).json({ error: error.message });
     return res.json({ trades: data });
   }
+
   res.setHeader("Allow", "GET,POST"); res.status(405).end();
 }

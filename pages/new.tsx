@@ -7,12 +7,13 @@ export default function NewIntake(){
     const r=await fetch("/api/trades",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({customer,sortswift_order_no:form.sortswift_order_no||null,est_item_count:form.est_item_count?Number(form.est_item_count):null,notes:form.notes||null,staff_checkin:form.staff_checkin||null})}).then(r=>r.json());
     setCreated(r.trade); setBusy(false);
   };
-  return (<div style={{padding:20,fontFamily:"system-ui"}}>
+  return (<div style={{paddingTop:4,fontFamily:"system-ui"}}>
     <h1>New Intake</h1>
-    {!created?(<form onSubmit={onSubmit} style={{display:"grid",gap:8,maxWidth:480}}>
+    {!created?(<form onSubmit={onSubmit} style={{display:"grid",gap:8,maxWidth:520}}>
       <input name="customer_name" placeholder="Customer name" onChange={onChange}/>
       <input name="customer_phone" placeholder="Phone" onChange={onChange}/>
       <input name="customer_email" placeholder="Email" onChange={onChange}/>
+      <input name="shopify_customer_id" placeholder="Shopify Customer ID (numeric)" onChange={onChange}/>
       <input name="sortswift_order_no" placeholder="SortSwift # (optional)" onChange={onChange}/>
       <input name="est_item_count" placeholder="Estimated item count" onChange={onChange}/>
       <input name="staff_checkin" placeholder="Staff initials" onChange={onChange}/>

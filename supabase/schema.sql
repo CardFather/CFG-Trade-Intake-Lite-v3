@@ -1,3 +1,4 @@
+create extension if not exists pgcrypto;
 create table if not exists trades (
   id uuid primary key default gen_random_uuid(),
   intake_id text unique not null,
@@ -23,6 +24,9 @@ create table if not exists trades (
   payout_type text,
   meta jsonb default '{}'::jsonb
 );
+create index if not exists idx_trades_status on trades(status);
+create index if not exists idx_trades_slug on trades(qr_slug);
+
 create table if not exists trade_events (
   id uuid primary key default gen_random_uuid(),
   trade_id uuid references trades(id) on delete cascade,
@@ -31,6 +35,7 @@ create table if not exists trade_events (
   actor text,
   created_at timestamptz default now()
 );
+
 create table if not exists store_credit_ledger (
   id uuid primary key default gen_random_uuid(),
   shopify_customer_id text not null,
@@ -40,3 +45,4 @@ create table if not exists store_credit_ledger (
   actor text,
   created_at timestamptz default now()
 );
+create index if not exists idx_ledger_customer on store_credit_ledger(shopify_customer_id);

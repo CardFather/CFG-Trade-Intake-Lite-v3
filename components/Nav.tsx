@@ -12,7 +12,7 @@ export default function Nav(){
     setQ("");
   };
   const Item = ({href,label}:{href:string,label:string}) => (
-    <Link href={href} className="nav-link" style={{padding:"6px 10px",borderRadius:8,background:r.pathname===href?"#111":"#222",color:"#fff",textDecoration:"none"}}>
+    <Link href={href} style={{padding:"6px 10px",borderRadius:8,background:r.pathname===href?"#111":"#222",color:"#fff",textDecoration:"none"}}>
       {label}
     </Link>
   );
